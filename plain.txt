@@ -1,0 +1,146 @@
+
+## 🎯 Usage
+
+### Command Line Interface
+
+```python
+from question_generator import QuestionGenerator
+
+# Initialize the generator
+generator = QuestionGenerator(use_chromadb=True)
+
+# Load your data
+generator.load_data(
+    questions_file="data/existing_questions.csv",
+    textbook_file="data/textbook_content.txt"
+)
+
+# Generate questions
+questions = generator.generate_questions(
+    topic="machine learning algorithms",
+    num_questions=5,
+    difficulty="medium",
+    top_k=5  # Number of similar items to retrieve
+)
+
+# Print results
+for i, q_data in enumerate(questions, 1):
+    print(f"Q{i}: {q_data['question']}")
+    print(f"Score: {q_data['evaluation']['overall_score']}/10")
+```
+
+### Web Interface
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Then open your browser to `http://localhost:8501`
+
+### Batch Processing
+
+```python
+# Generate questions for multiple topics
+topics = ["machine learning", "data structures", "algorithms"]
+batch_results = generator.batch_generate(
+    topics=topics,
+    num_questions_per_topic=3,
+    difficulty="medium"
+)
+```
+
+## ⚙️ Configuration
+
+### RAG Parameters
+
+- **top_k**: Number of similar items to retrieve (default: 5)
+- **embedding_model**: Sentence transformer model for embeddings (default: "all-MiniLM-L6-v2")
+- **chunk_size**: Size of textbook content chunks (default: 500 words)
+
+### LLM Parameters
+
+- **model_name**: OpenAI model to use (default: "gpt-3.5-turbo")
+- **temperature**: Creativity level (0.0-1.0, default: 0.7)
+- **max_tokens**: Maximum response length (default: 1000)
+
+### Quality Evaluation
+
+The system automatically evaluates generated questions on:
+- **Clarity**: How clear and understandable is the question?
+- **Relevance**: How relevant is it to the topic?
+- **Difficulty**: Is the difficulty level appropriate?
+- **Educational Value**: Does it test important concepts?
+
+## 🏗️ Architecture
+
+
+## 🔧 Advanced Usage
+
+### Custom Embedding Models
+
+```python
+from embedding_system import EmbeddingSystem
+
+# Use a different embedding model
+embedding_system = EmbeddingSystem(model_name="all-mpnet-base-v2")
+```
+
+### Custom LLM Models
+
+```python
+from llm_integration import LLMIntegration
+
+# Use GPT-4
+llm = LLMIntegration(model_name="gpt-4")
+```
+
+### Fine-tuning Top-K Values
+
+```python
+# Experiment with different top-k values
+for k in [3, 5, 7, 10]:
+    questions = generator.generate_questions(
+        topic="your_topic",
+        top_k=k
+    )
+    print(f"Top-K={k}: Generated {len(questions)} questions")
+```
+
+## 📈 Performance Tips
+
+1. **Optimize chunk size**: Smaller chunks (300-500 words) work better for specific topics
+2. **Tune top-k values**: Start with 5, increase for more diverse context
+3. **Use appropriate difficulty levels**: Match your target audience
+4. **Quality over quantity**: Generate fewer, higher-quality questions
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+1. **"No embeddings loaded" error**: Make sure to call `load_data()` before generating questions
+2. **OpenAI API errors**: Check your API key in the `.env` file
+3. **Memory issues**: Reduce chunk size or use smaller embedding models
+4. **Poor question quality**: Increase top-k value or improve input data quality
+
+### Performance Optimization
+
+- Use ChromaDB for large datasets (>10,000 items)
+- Use sentence-transformers for smaller datasets
+- Adjust chunk size based on your content type
+- Fine-tune LLM prompts for your specific domain
+
+## 📞 Support
+
+For questions and support, please open an issue on GitHub or contact the maintainers.
